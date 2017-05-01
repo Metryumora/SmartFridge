@@ -1,4 +1,6 @@
-package snaige.smartfridge;
+package snaige.smartfridge.entity;
+
+import snaige.smartfridge.HibernateUtil;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package snaige.smartfridge;
+package snaige.smartfridge.entity;
 
 
 import javax.persistence.*;

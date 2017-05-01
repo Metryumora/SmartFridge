@@ -10,8 +10,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/main.fxml"));
-        primaryStage.setTitle("SmartFridge Control Panel");
+        Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
+        primaryStage.setTitle("Log in SmartFridge");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }

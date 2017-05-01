@@ -1,4 +1,4 @@
-package snaige.smartfridge;
+package snaige.smartfridge.entity;
 
 /**
  * Created by Metr_yumora on 17.03.2017.

@@ -1,4 +1,4 @@
-package snaige.smartfridge;
+package snaige.smartfridge.entity;
 
 import javax.persistence.*;
 
@@ -9,13 +9,13 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Integer id;
 
     @Column
-    String name;
+    private String name;
 
     @Column
-    String hash;
+    private String hash;
 
     public User() {
     }
@@ -29,7 +29,7 @@ public class User {
         }
     }
 
-    public Boolean verifyPassword(char[] password) {
+    public Boolean verifyPassword(String password) {
         try {
             return PasswordStorage.verifyPassword(password, this.getHash());
         } catch (PasswordStorage.CannotPerformOperationException e) {

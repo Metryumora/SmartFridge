@@ -6,6 +6,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import snaige.smartfridge.entity.HistoryRecord;
+import snaige.smartfridge.entity.User;
 
 /**
  * Created by Metr_yumora on 28.04.2017.
@@ -15,6 +17,8 @@ public class HibernateUtil {
     private static SessionFactory sessionFactory;
 
     private static Session session;
+
+    private static User activeUser;
 
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null)
@@ -48,10 +52,25 @@ public class HibernateUtil {
         getSessionFactory().close();
     }
 
-    public static User getUserByName(String name) {
-        User user;
-        user = getSession().createQuery("from User where name = " + name, User.class).uniqueResult();
-        return user;
+    public static User getUserByName(String username) {
+        //getSession().save(new User("User","password"));
+        return getSession().createQuery("from User u where u.name='" + username + "'", User.class).getSingleResult();
     }
 
+    public static User getActiveUser() {
+        return activeUser;
+    }
+
+    public static void setActiveUser(User activeUser) {
+        HibernateUtil.activeUser = activeUser;
+    }
+
+    public static boolean authUser(String login, String password) {
+        User checkedUser = getUserByName(login);
+        if (checkedUser != null && checkedUser.verifyPassword(password)) {
+            setActiveUser(checkedUser);
+            return true;
+        } else
+            return false;
+    }
 }

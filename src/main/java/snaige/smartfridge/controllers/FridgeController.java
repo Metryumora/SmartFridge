@@ -1,4 +1,4 @@
-package snaige.smartfridge;
+package snaige.smartfridge.controllers;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -7,6 +7,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import snaige.smartfridge.entity.ControlPanel;
+import snaige.smartfridge.entity.Fridge;
+import snaige.smartfridge.entity.HistoryRecord;
+import snaige.smartfridge.entity.SensorSummary;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,7 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Controller {
+public class FridgeController {
 
 
     @FXML

@@ -1,4 +1,6 @@
-package snaige.smartfridge;
+package snaige.smartfridge.entity;
+
+import snaige.smartfridge.HibernateUtil;
 
 import java.util.Random;
 
@@ -12,8 +14,6 @@ public class Fridge {
 
     Thread updateThread;
 
-    private User currentUser;
-
     private SensorSummary sensorSummary;
 
     private ControlPanel controlPanel;
@@ -25,8 +25,6 @@ public class Fridge {
     private long sensorUpdateInterval;
 
     public Fridge() {
-        currentUser = new User("User", "password");
-        HibernateUtil.getSession().save(currentUser);
         this.sensorSummary = new SensorSummary(
                 TemperatureController.DEFAULT_UPPER_SECTION_TEMPERATURE,
                 TemperatureController.DEFAULT_LOWER_SECTION_TEMPERATURE,
@@ -102,7 +100,7 @@ public class Fridge {
     public void applyTempMode(double upper, double lower, double freezer) {
         if (this.controlPanel.getUpper().getDesiredValue() != upper) {
             HistoryRecord newRecord = new HistoryRecord(
-                    currentUser,
+                    HibernateUtil.getActiveUser(),
                     "Upper",
                     this.controlPanel.getUpper().getDesiredValue(),
                     upper
@@ -113,7 +111,7 @@ public class Fridge {
         }
         if (this.controlPanel.getLower().getDesiredValue() != lower) {
             HistoryRecord newRecord = new HistoryRecord(
-                    currentUser,
+                    HibernateUtil.getActiveUser(),
                     "Lower",
                     this.controlPanel.getLower().getDesiredValue(),
                     lower
@@ -124,7 +122,7 @@ public class Fridge {
         }
         if (this.controlPanel.getFreezer().getDesiredValue() != freezer) {
             HistoryRecord newRecord = new HistoryRecord(
-                    currentUser,
+                    HibernateUtil.getActiveUser(),
                     "Freezer",
                     this.controlPanel.getFreezer().getDesiredValue(),
                     freezer

@@ -25,11 +25,13 @@
         <property name="hibernate.hbm2ddl.auto">
             update
         </property>
+        <property name="show_sql">false
+        </property>
         <property name="hibernate.connection.autocommit">true</property>
         <property name="connection.autocommit">true</property>
         <property name="transaction.auto_close_session">true</property>
         <property name="hibernate.transaction.auto_close_session">true</property>
-        <mapping class="snaige.smartfridge.HistoryRecord"/>
-        <mapping class="snaige.smartfridge.User"/>
+        <mapping class="snaige.smartfridge.entity.HistoryRecord"/>
+        <mapping class="snaige.smartfridge.entity.User"/>
     </session-factory>
 </hibernate-configuration>
