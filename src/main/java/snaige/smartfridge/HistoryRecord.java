@@ -1,53 +1,49 @@
 package snaige.smartfridge;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Created by Metr_yumora on 24.03.2017.
  */
+@Entity
 public class HistoryRecord {
 
-    private String user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    private String date;
+    @ManyToOne(targetEntity = User.class)
+    private User user;
 
-    private String time;
+    @Temporal(TemporalType.TIMESTAMP)
+    Date dateTime;
 
+    @Column
     private String changedSetting;
 
-    private String previousValue;
+    @Column
+    private Double previousValue;
 
-    private String newValue;
+    @Column
+    private Double newValue;
 
-    DateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY");
-
-    DateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public String getDate() {
-        return date;
+    public Date getDateTime() {
+        return dateTime;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getChangedSetting() {
@@ -58,38 +54,38 @@ public class HistoryRecord {
         this.changedSetting = changedSetting;
     }
 
-    public String getPreviousValue() {
+    public Double getPreviousValue() {
         return previousValue;
     }
 
-    public void setPreviousValue(String previousValue) {
+    public void setPreviousValue(Double previousValue) {
         this.previousValue = previousValue;
     }
 
-    public String getNewValue() {
+    public Double getNewValue() {
         return newValue;
     }
 
-    public void setNewValue(String newValue) {
+    public void setNewValue(Double newValue) {
         this.newValue = newValue;
     }
 
-    public HistoryRecord(String user, String changedSetting, double previousValue, double newValue) {
-        this.user = user;
-        Date current = Calendar.getInstance().getTime();
-        this.time = timeFormat.format(current);
-        this.date = dateFormat.format(current);
-        this.changedSetting = changedSetting;
-        this.previousValue = String.format("%2f", previousValue);
-        this.newValue = String.format("%2f", newValue);
+    public Integer getId() {
+        return id;
     }
 
-    public HistoryRecord(String user, String date, String time, String changedSetting, double previousValue, double newValue) {
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public HistoryRecord() {
+    }
+
+    public HistoryRecord(User user, String changedSetting, Double previousValue, Double newValue) {
         this.user = user;
-        this.date = date;
-        this.time = time;
+        dateTime = Calendar.getInstance().getTime();
         this.changedSetting = changedSetting;
-        this.previousValue = String.format("%2f", previousValue);
-        this.newValue = String.format("%2f", newValue);
+        this.previousValue = previousValue;
+        this.newValue = newValue;
     }
 }

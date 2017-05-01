@@ -8,11 +8,11 @@ import java.util.Random;
 
 public class Fridge {
 
-    String historyFilepath = "history";
-
     Updater updater;
 
     Thread updateThread;
+
+    private User currentUser;
 
     private SensorSummary sensorSummary;
 
@@ -24,7 +24,9 @@ public class Fridge {
 
     private long sensorUpdateInterval;
 
-    public Fridge(String historyFilepath) {
+    public Fridge() {
+        currentUser = new User("User", "password");
+        HibernateUtil.getSession().save(currentUser);
         this.sensorSummary = new SensorSummary(
                 TemperatureController.DEFAULT_UPPER_SECTION_TEMPERATURE,
                 TemperatureController.DEFAULT_LOWER_SECTION_TEMPERATURE,
@@ -32,10 +34,7 @@ public class Fridge {
         );
         this.controlPanel = new ControlPanel();
         sensorUpdateInterval = DEFAULT_UPDATE_INTERVAL;
-        this.history = new History(historyFilepath);
-        if (history.getHistoryRecords().isEmpty()) {
-            this.history = new History();
-        }
+        this.history = new History();
         updater = new Updater();
         updateThread = new Thread(updater);
         updateThread.start();
@@ -64,10 +63,11 @@ public class Fridge {
     }
 
     public void updateSensors() {
+        Random random = new Random();
         if (sensorSummary.getUpper().getValue() == controlPanel.getUpper().getDesiredValue()) {
             sensorSummary.getUpper().setValue(sensorSummary.getUpper().getValue()
-                    + Math.pow(-1, new Random().nextInt(2))
-                    * sensorSummary.getUpper().getValue() * new Random().nextInt(6) / 100);
+                    + Math.pow(-1, random.nextInt(2))
+                    * sensorSummary.getUpper().getValue() * (random.nextInt(6) / 100.0));
         } else {
             if (sensorSummary.getUpper().getValue() < controlPanel.getUpper().getDesiredValue()) {
                 sensorSummary.getUpper().setValue(sensorSummary.getUpper().getValue() + 0.25);
@@ -77,8 +77,8 @@ public class Fridge {
         }
         if (sensorSummary.getLower().getValue() == controlPanel.getLower().getDesiredValue()) {
             sensorSummary.getLower().setValue(sensorSummary.getLower().getValue()
-                    + Math.pow(-1, new Random().nextInt(2))
-                    * sensorSummary.getLower().getValue() * new Random().nextInt(6) / 100);
+                    + Math.pow(-1, random.nextInt(2))
+                    * sensorSummary.getLower().getValue() * (random.nextInt(6) / 100.0));
         } else {
             if (sensorSummary.getLower().getValue() < controlPanel.getLower().getDesiredValue()) {
                 sensorSummary.getLower().setValue(sensorSummary.getLower().getValue() + 0.25);
@@ -88,8 +88,8 @@ public class Fridge {
         }
         if (sensorSummary.getFreezer().getValue() == controlPanel.getFreezer().getDesiredValue()) {
             sensorSummary.getFreezer().setValue(sensorSummary.getFreezer().getValue()
-                    + Math.pow(-1, new Random().nextInt(2))
-                    * sensorSummary.getFreezer().getValue() * new Random().nextInt(6) / 100);
+                    + Math.pow(-1, random.nextInt(2))
+                    * sensorSummary.getFreezer().getValue() * (random.nextInt(6) / 100.0));
         } else {
             if (sensorSummary.getFreezer().getValue() < controlPanel.getFreezer().getDesiredValue()) {
                 sensorSummary.getFreezer().setValue(sensorSummary.getFreezer().getValue() + 0.25);
@@ -101,33 +101,38 @@ public class Fridge {
 
     public void applyTempMode(double upper, double lower, double freezer) {
         if (this.controlPanel.getUpper().getDesiredValue() != upper) {
-            history.getHistoryRecords().add(new HistoryRecord(
-                    "User",
+            HistoryRecord newRecord = new HistoryRecord(
+                    currentUser,
                     "Upper",
                     this.controlPanel.getUpper().getDesiredValue(),
                     upper
-            ));
+            );
+            history.getHistoryRecords().add(newRecord);
+            HibernateUtil.getSession().save(newRecord);
             this.controlPanel.getUpper().setDesiredValue(upper);
         }
         if (this.controlPanel.getLower().getDesiredValue() != lower) {
-            history.getHistoryRecords().add(new HistoryRecord(
-                    "User",
+            HistoryRecord newRecord = new HistoryRecord(
+                    currentUser,
                     "Lower",
                     this.controlPanel.getLower().getDesiredValue(),
                     lower
-            ));
+            );
+            history.getHistoryRecords().add(newRecord);
+            HibernateUtil.getSession().save(newRecord);
             this.controlPanel.getLower().setDesiredValue(lower);
         }
         if (this.controlPanel.getFreezer().getDesiredValue() != freezer) {
-            history.getHistoryRecords().add(new HistoryRecord(
-                    "User",
+            HistoryRecord newRecord = new HistoryRecord(
+                    currentUser,
                     "Freezer",
                     this.controlPanel.getFreezer().getDesiredValue(),
                     freezer
-            ));
+            );
+            history.getHistoryRecords().add(newRecord);
+            HibernateUtil.getSession().save(newRecord);
             this.controlPanel.getFreezer().setDesiredValue(freezer);
         }
-        this.history.writeToFile(historyFilepath);
     }
 
     public History getHistory() {

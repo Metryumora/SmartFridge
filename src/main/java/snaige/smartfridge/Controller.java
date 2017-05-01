@@ -1,17 +1,21 @@
 package snaige.smartfridge;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Controller {
+
 
     @FXML
     private Label upperLabel;
@@ -53,7 +57,7 @@ public class Controller {
     @FXML
     private ObservableList<HistoryRecord> observableHistory;
 
-    private Fridge fridge = new Fridge("history");
+    private Fridge fridge = new Fridge();
     private SensorSummary summary = fridge.getSensorSummary();
     private ControlPanel panel = fridge.getControlPanel();
 
@@ -67,7 +71,7 @@ public class Controller {
     }
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         initTableView();
         cpUpperInput.setValue(panel.getUpper().getDesiredValue());
         cpLowerInput.setValue(panel.getLower().getDesiredValue());
@@ -77,7 +81,7 @@ public class Controller {
             public void run() {
                 Platform.runLater(() -> update());
             }
-        },0,1000,TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
     @FXML
@@ -97,11 +101,21 @@ public class Controller {
         );
         historyColDate = new TableColumn<HistoryRecord, String>("Date");
         historyColDate.setCellValueFactory(
-                new PropertyValueFactory<HistoryRecord, String>("date")
+                HistoryRecord -> {
+                    SimpleStringProperty property = new SimpleStringProperty();
+                    DateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY");
+                    property.setValue(dateFormat.format(HistoryRecord.getValue().getDateTime()));
+                    return property;
+                }
         );
         historyColTime = new TableColumn<HistoryRecord, String>("Time");
         historyColTime.setCellValueFactory(
-                new PropertyValueFactory<HistoryRecord, String>("time")
+                HistoryRecord -> {
+                    SimpleStringProperty property = new SimpleStringProperty();
+                    DateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+                    property.setValue(timeFormat.format(HistoryRecord.getValue().getDateTime()));
+                    return property;
+                }
         );
         historyColSection = new TableColumn<HistoryRecord, String>("Section");
         historyColSection.setCellValueFactory(
@@ -109,11 +123,19 @@ public class Controller {
         );
         historyColPrevValue = new TableColumn<HistoryRecord, String>("Prev. Value");
         historyColPrevValue.setCellValueFactory(
-                new PropertyValueFactory<HistoryRecord, String>("previousValue")
+                HistoryRecord -> {
+                    SimpleStringProperty property = new SimpleStringProperty();
+                    property.setValue(String.format("%6.2f", HistoryRecord.getValue().getPreviousValue()));
+                    return property;
+                }
         );
         historyColNewValue = new TableColumn<HistoryRecord, String>("New Value");
         historyColNewValue.setCellValueFactory(
-                new PropertyValueFactory<HistoryRecord, String>("newValue")
+                HistoryRecord -> {
+                    SimpleStringProperty property = new SimpleStringProperty();
+                    property.setValue(String.format("%6.2f", HistoryRecord.getValue().getNewValue()));
+                    return property;
+                }
         );
         historyTable.getColumns().clear();
         historyTable.getColumns().addAll(
