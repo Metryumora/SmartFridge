@@ -17,7 +17,7 @@
             root
         </property>
         <property name="connection.password">
-            root2016
+            password
         </property>
         <property name="hbm2ddl.auto">
             update
