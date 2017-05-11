@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import snaige.smartfridge.HibernateUtil;
+import snaige.smartfridge.Main;
 import snaige.smartfridge.entity.ControlPanel;
 import snaige.smartfridge.entity.Fridge;
 import snaige.smartfridge.entity.HistoryRecord;
@@ -95,6 +97,13 @@ public class FridgeController {
         freezerLabel.setText(summary.getFreezer().toString());
         observableHistory = FXCollections.observableArrayList(fridge.getHistory().getHistoryRecords());
         historyTable.setItems(observableHistory);
+    }
+
+    @FXML
+    private void logOut() {
+        HibernateUtil.logOut();
+        Main.getMainController().getFridgeControlStage().hide();
+        Main.getMainController().getLoginStage().show();
     }
 
     private void initTableView() {

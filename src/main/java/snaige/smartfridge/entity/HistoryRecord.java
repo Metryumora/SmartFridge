@@ -11,16 +11,13 @@ import java.util.Date;
 @Entity
 public class HistoryRecord {
 
+    @Temporal(TemporalType.TIMESTAMP)
+    Date dateTime;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @ManyToOne(targetEntity = User.class)
     private User user;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    Date dateTime;
-
     @Column
     private String changedSetting;
 
@@ -29,6 +26,17 @@ public class HistoryRecord {
 
     @Column
     private Double newValue;
+
+    public HistoryRecord() {
+    }
+
+    public HistoryRecord(User user, String changedSetting, Double previousValue, Double newValue) {
+        this.user = user;
+        dateTime = Calendar.getInstance().getTime();
+        this.changedSetting = changedSetting;
+        this.previousValue = previousValue;
+        this.newValue = newValue;
+    }
 
     public User getUser() {
         return user;
@@ -76,16 +84,5 @@ public class HistoryRecord {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public HistoryRecord() {
-    }
-
-    public HistoryRecord(User user, String changedSetting, Double previousValue, Double newValue) {
-        this.user = user;
-        dateTime = Calendar.getInstance().getTime();
-        this.changedSetting = changedSetting;
-        this.previousValue = previousValue;
-        this.newValue = newValue;
     }
 }

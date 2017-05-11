@@ -10,18 +10,12 @@ import java.util.Random;
 
 public class Fridge {
 
-    Updater updater;
-
-    Thread updateThread;
-
-    private SensorSummary sensorSummary;
-
-    private ControlPanel controlPanel;
-
-    private History history;
-
     private static final int DEFAULT_UPDATE_INTERVAL = 1000;
-
+    Updater updater;
+    Thread updateThread;
+    private SensorSummary sensorSummary;
+    private ControlPanel controlPanel;
+    private History history;
     private long sensorUpdateInterval;
 
     public Fridge() {
@@ -45,19 +39,6 @@ public class Fridge {
 
     public ControlPanel getControlPanel() {
         return controlPanel;
-    }
-
-    public class Updater implements Runnable {
-        public void run() {
-            while (true) {
-                updateSensors();
-                try {
-                    Thread.sleep(sensorUpdateInterval);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     public void updateSensors() {
@@ -147,5 +128,18 @@ public class Fridge {
 
     public void setSensorUpdateInterval(long sensorUpdateInterval) {
         this.sensorUpdateInterval = sensorUpdateInterval;
+    }
+
+    public class Updater implements Runnable {
+        public void run() {
+            while (true) {
+                updateSensors();
+                try {
+                    Thread.sleep(sensorUpdateInterval);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

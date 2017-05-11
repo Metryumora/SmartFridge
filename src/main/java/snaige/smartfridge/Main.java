@@ -1,22 +1,26 @@
 package snaige.smartfridge;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
+import snaige.smartfridge.controllers.MainController;
 
 public class Main extends Application {
 
+    private static MainController mainController;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
-        primaryStage.setTitle("Log in SmartFridge");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        mainController = new MainController(primaryStage);
     }
 
     public static void main(String[] args) {
         launch(args);
+        HibernateUtil.getSession();
     }
+
+    public static MainController getMainController() {
+        return mainController;
+    }
+
+
 }

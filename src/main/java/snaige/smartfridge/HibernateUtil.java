@@ -9,6 +9,8 @@ import org.hibernate.service.ServiceRegistry;
 import snaige.smartfridge.entity.HistoryRecord;
 import snaige.smartfridge.entity.User;
 
+import javax.persistence.NoResultException;
+
 /**
  * Created by Metr_yumora on 28.04.2017.
  */
@@ -43,18 +45,18 @@ public class HibernateUtil {
         return session;
     }
 
-    public static void setSession(Session session) {
-        HibernateUtil.session = session;
-    }
-
-
     public static void shutdown() {
         getSessionFactory().close();
     }
 
     public static User getUserByName(String username) {
-        //getSession().save(new User("User","password"));
-        return getSession().createQuery("from User u where u.name='" + username + "'", User.class).getSingleResult();
+        try {
+            return getSession().createQuery("from User u where u.name='" + username + "'", User.class).getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("No results!");
+            return null;
+        }
+
     }
 
     public static User getActiveUser() {
@@ -72,5 +74,9 @@ public class HibernateUtil {
             return true;
         } else
             return false;
+    }
+
+    public static void logOut() {
+        activeUser = null;
     }
 }

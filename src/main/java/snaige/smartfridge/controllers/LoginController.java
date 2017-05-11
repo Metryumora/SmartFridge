@@ -1,13 +1,11 @@
 package snaige.smartfridge.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import snaige.smartfridge.HibernateUtil;
+import snaige.smartfridge.Main;
 
 /**
  * Created by Metr_yumora on 01.05.2017.
@@ -23,14 +21,21 @@ public class LoginController {
     @FXML
     void login() throws Exception {
         if (HibernateUtil.authUser(loginTF.getText(), passwordTF.getText())) {
-            System.out.print("Done!");
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/main.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage fridgeControlStage = new Stage();
-            fridgeControlStage.setScene(new Scene(root));
-            fridgeControlStage.setTitle("SmartFridge Control Panel");
-            fridgeControlStage.show();
-        } else System.out.print("Not found!");
+            Main.getMainController().getLoginStage().hide();
+            Main.getMainController().getFridgeControlStage().show();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Wrong user or password!");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    void switchToRegister() throws Exception {
+        Main.getMainController().getLoginStage().hide();
+        Main.getMainController().getRegistrationStage().show();
     }
 
 }

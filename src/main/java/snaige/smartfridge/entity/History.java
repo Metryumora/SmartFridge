@@ -12,6 +12,11 @@ public class History {
 
     private List<HistoryRecord> historyRecords;
 
+    public History() {
+        this.historyRecords = new ArrayList<HistoryRecord>();
+        readFromDB();
+    }
+
     public void readFromDB() {
         historyRecords = HibernateUtil.getSession().createQuery("FROM HistoryRecord", HistoryRecord.class).list();
     }
@@ -21,11 +26,6 @@ public class History {
                 historyRecords) {
             HibernateUtil.getSession().save(historyRecord);
         }
-    }
-
-    public History() {
-        this.historyRecords = new ArrayList<HistoryRecord>();
-        readFromDB();
     }
 
     public List<HistoryRecord> getHistoryRecords() {

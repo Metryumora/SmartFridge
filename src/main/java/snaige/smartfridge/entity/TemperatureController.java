@@ -13,15 +13,15 @@ public class TemperatureController {
 
     private double desiredValue;
 
+    public TemperatureController(double desiredValue) {
+        this.desiredValue = desiredValue;
+    }
+
     public double getDesiredValue() {
         return desiredValue;
     }
 
     public void setDesiredValue(double desiredValue) {
-        this.desiredValue = desiredValue;
-    }
-
-    public TemperatureController(double desiredValue) {
         this.desiredValue = desiredValue;
     }
 }
